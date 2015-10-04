@@ -26,3 +26,17 @@ C:\Users\Николай\Documents\Visual Studio 2015\Projects\AudioPlayer\AudioP
 C:\Users\Николай\Documents\Visual Studio 2015\Projects\AudioPlayer\AudioPlayer\obj\Debug\AudioPlayer.g.resources
 C:\Users\Николай\Documents\Visual Studio 2015\Projects\AudioPlayer\AudioPlayer\obj\Debug\AudioPlayer.Properties.Resources.resources
 C:\Users\Николай\Documents\Visual Studio 2015\Projects\AudioPlayer\AudioPlayer\obj\Debug\AudioPlayer.csproj.GenerateResource.Cache
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\bin\Debug\AudioPlayer.exe.config
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\AudioPlayer.exe
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\AudioPlayer.pdb
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\AudioPlayer.csprojResolveAssemblyReference.cache
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\MainWindow.baml
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\MainWindow.g.cs
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\App.g.cs
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\AudioPlayer_MarkupCompile.cache
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\AudioPlayer.g.resources
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\AudioPlayer.Properties.Resources.resources
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\AudioPlayer.csproj.GenerateResource.Cache
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\bin\Debug\AudioPlayer.exe
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\bin\Debug\AudioPlayer.pdb
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\bin\Debug\Bass.Net.xml
