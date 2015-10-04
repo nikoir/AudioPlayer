@@ -54,23 +54,28 @@
         <ListBox x:Name="CompositionList" Grid.Column="1" Margin="10, 0, 10, 60" SelectedIndex="{Binding CurrentFileNumber, Mode=TwoWay}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Column="0" Grid.Row="0" Content="Title:"/>
-                        <Label Grid.Column="0" Grid.Row="1" Content="Album:"/>
-                        <Label Grid.Column="0" Grid.Row="2" Content="Artist:"/>
-                        <Label Grid.Column="1" Grid.Row="0" Content="{Binding Tag.Title}"/>
-                        <Label Grid.Column="1" Grid.Row="1" Content="{Binding Tag.Album}"/>
-                        <Label Grid.Column="1" Grid.Row="2" Content="{Binding Tag.FirstArtist}"/>
-                    </Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="100" Height="100" Margin="10" Source="{Binding Image}">
+                            
+                        </Image>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Label Grid.Column="0" Grid.Row="0" Content="Title:"/>
+                            <Label Grid.Column="0" Grid.Row="1" Content="Album:"/>
+                            <Label Grid.Column="0" Grid.Row="2" Content="Artist:"/>
+                            <Label Grid.Column="1" Grid.Row="0" Content="{Binding FileInfo.Tag.Title}"/>
+                            <Label Grid.Column="1" Grid.Row="1" Content="{Binding FileInfo.Tag.Album}"/>
+                            <Label Grid.Column="1" Grid.Row="2" Content="{Binding FileInfo.Tag.FirstArtist}"/>
+                        </Grid>
+                    </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
@@ -97,7 +102,7 @@
                         <ColumnDefinition/>
                         <ColumnDefinition Width="70"/>
                     </Grid.ColumnDefinitions>
-                    <Slider x:Name="slider" Style="{StaticResource MyCustomStyleForSlider}" Margin="0, 10, 0, 10" Thumb.DragStarted="slider_DragStarted" Thumb.DragCompleted="slider_DragCompleted" Grid.Column="1" Value="{Binding Position.TotalSeconds, Mode=OneWay}" Minimum="0" Maximum="{Binding Length.TotalSeconds}"/>
+                    <Slider x:Name="slider" Style="{StaticResource MyCustomStyleForSlider}" Margin="0, 10, 0, 10" Thumb.DragStarted="slider_DragStarted" Thumb.DragCompleted="slider_DragCompleted" Grid.Column="1" Value="{Binding Compositions[CurrentFileNumber].Position.TotalSeconds, Mode=OneWay}" Minimum="0" Maximum="{Binding Length.TotalSeconds}"/>
                     <Label Margin="5" Grid.Column="0" Content="00:00:00" x:Name="CurLengthLB"/>
                     <Label Margin="5" Grid.Column="2" Content="00:00:00" x:Name="LengthLB"/>
                 </Grid>

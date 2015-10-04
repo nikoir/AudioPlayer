@@ -33,7 +33,8 @@ namespace AudioPlayer
         {
             InitializeComponent();
             VolumeSlider.Value = 50;
-            //spectrumAnalyzer.RegisterSoundPlayer(bassEngine);
+            bassEngine = new BassEngine();
+            spectrumAnalyzer.RegisterSoundPlayer(bassEngine);
         }
 
         void PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -41,10 +42,11 @@ namespace AudioPlayer
             switch (e.PropertyName)
             {
                 case "Position":
-                    CurLengthLB.Content = bassEngine.Position.ToString(@"hh\:mm\:ss");
+                    CurLengthLB.Content = bassEngine.GetCurrentFile().Position.ToString(@"hh\:mm\:ss");
+                    //slider.Value = bassEngine.GetCurrentFile().Position.TotalSeconds;
                     break;
                 case "Length":
-                    LengthLB.Content = bassEngine.Length.ToString(@"hh\:mm\:ss");
+                    LengthLB.Content = bassEngine.GetCurrentFile().Length.ToString(@"hh\:mm\:ss");
                     break;
             }
         }
@@ -64,12 +66,10 @@ namespace AudioPlayer
             openFileDialog.Multiselect = true;
             if (openFileDialog.ShowDialog() == true)
             {
-                bassEngine = new BassEngine(openFileDialog.FileNames);
-                spectrumAnalyzer.RegisterSoundPlayer(bassEngine);
-                bassEngine.PropertyChanged += PropertyChanged;
+                bassEngine.AddFiles(openFileDialog.FileNames, PropertyChanged);
                 this.DataContext = bassEngine;
                 CompositionList.ItemsSource = bassEngine.Compositions;
-                LengthLB.Content = bassEngine.Length.ToString(@"hh\:mm\:ss");
+                LengthLB.Content = bassEngine.GetCurrentFile().Length.ToString(@"hh\:mm\:ss");
                 bassEngine.SetVolume(Convert.ToInt32(VolumeSlider.Value));
             }
         }
