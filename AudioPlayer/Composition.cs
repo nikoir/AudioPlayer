@@ -17,8 +17,6 @@ namespace AudioPlayer
     {
         TagLib.File fileInfo;
         BitmapImage image;
-        TimeSpan position;
-        TimeSpan length;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public TagLib.File FileInfo
@@ -43,30 +41,6 @@ namespace AudioPlayer
             {
                 image = value;
                 this.NotifyPropertyChanged("Image");
-            }
-        }
-        public TimeSpan Position
-        {
-            get
-            {
-                return position;
-            }
-            set
-            {
-                position = value;
-                NotifyPropertyChanged("Position");
-            }
-        }
-        public TimeSpan Length
-        {
-            get
-            {
-                return length;
-            }
-            set
-            {
-                length = value;
-                NotifyPropertyChanged("Length");
             }
         }
         private void NotifyPropertyChanged(string info)

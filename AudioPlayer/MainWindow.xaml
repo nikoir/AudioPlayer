@@ -51,12 +51,12 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.Column="0" Width="3"/>
-        <ListBox x:Name="CompositionList" Grid.Column="1" Margin="10, 0, 10, 60" SelectedIndex="{Binding CurrentFileNumber, Mode=TwoWay}">
+        <ListBox x:Name="CompositionList" Grid.Column="1" Margin="10, 0, 10, 60" SelectedIndex="{Binding CurrentCompositionNumber}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <Image Width="100" Height="100" Margin="10" Source="{Binding Image}">
-                            
+
                         </Image>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -88,7 +88,14 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition Height="100"></RowDefinition>
             </Grid.RowDefinitions>
-            <svl:SpectrumAnalyzer x:Name="spectrumAnalyzer" Grid.Row ="1" Margin ="10, 0, 10, 0"/>
+            <svl:SpectrumAnalyzer x:Name="spectrumAnalyzer" Grid.Row ="1" Margin ="10, 0, 10, 0" Foreground="#FF1D9923">
+                <svl:SpectrumAnalyzer.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Black" Offset="0"/>
+                        <GradientStop Color="#FFE1F0E8" Offset="1"/>
+                    </LinearGradientBrush>
+                </svl:SpectrumAnalyzer.Background>
+            </svl:SpectrumAnalyzer>
             <Menu Grid.Row="0" HorizontalAlignment="Stretch" Height="20" VerticalAlignment="Stretch">
                 <MenuItem Header="File">
                     <MenuItem Header="Open" Click="Browse_Click"></MenuItem>
@@ -102,9 +109,9 @@
                         <ColumnDefinition/>
                         <ColumnDefinition Width="70"/>
                     </Grid.ColumnDefinitions>
-                    <Slider x:Name="slider" Style="{StaticResource MyCustomStyleForSlider}" Margin="0, 10, 0, 10" Thumb.DragStarted="slider_DragStarted" Thumb.DragCompleted="slider_DragCompleted" Grid.Column="1" Value="{Binding Compositions[CurrentFileNumber].Position.TotalSeconds, Mode=OneWay}" Minimum="0" Maximum="{Binding Length.TotalSeconds}"/>
-                    <Label Margin="5" Grid.Column="0" Content="00:00:00" x:Name="CurLengthLB"/>
-                    <Label Margin="5" Grid.Column="2" Content="00:00:00" x:Name="LengthLB"/>
+                    <Slider x:Name="slider" Style="{StaticResource MyCustomStyleForSlider}" Margin="0, 10, 0, 10" Value="{Binding Position.TotalSeconds, Mode=OneWay}" Thumb.DragStarted="slider_DragStarted" Thumb.DragCompleted="slider_DragCompleted" Grid.Column="1"  Minimum="0" Maximum="{Binding Length.TotalSeconds}"/>
+                    <Label Margin="5" Grid.Column="0" Content="{Binding Position.TotalSeconds}" x:Name="CurLengthLB"/>
+                    <Label Margin="5" Grid.Column="2" Content="{Binding Length.TotalSeconds}" x:Name="LengthLB"/>
                 </Grid>
                 <Grid Height="50" Margin="10, 0, 10, 10">
                     <Grid.ColumnDefinitions>
@@ -116,7 +123,7 @@
                         <ColumnDefinition Width="90"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Play" Click="Play_Click" Grid.Column="3">
+                    <Button Content="Play" Click="Play_Click" Grid.Column="3" Background="{x:Null}">
                         <Button.Template>
                             <ControlTemplate>
                                 <Ellipse Fill="LightGray"></Ellipse>

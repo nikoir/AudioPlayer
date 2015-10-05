@@ -25,23 +25,65 @@ namespace AudioPlayer
         private bool canStop;
         public DispatcherTimer Timer { get; private set; }
         public List<Composition> Compositions { get; private set; }
-        public int currentFileNumber;
+        private Composition currentComposition;
+        public int currentCompositionNumber;
         public bool EnableRepeating { get; set; }
+        public TimeSpan length;
+        public TimeSpan position;
 
-        public int CurrentFileNumber
+        public TimeSpan Length
         {
             get
             {
-                return currentFileNumber;
+                return length;
             }
-            private set
+            set
+            {
+                length = value;
+                NotifyPropertyChanged("Length");
+            }
+        }
+
+        public TimeSpan Position
+        {
+            get
+            {
+                return position;
+            }
+            set
+            {
+                position = value;
+                NotifyPropertyChanged("Position");
+            }
+        }
+
+        public Composition CurrentComposition
+        {
+            get
+            {
+                return currentComposition;
+            }
+            set
+            {
+                currentComposition = value;
+                NotifyPropertyChanged("CurrentComposition");
+            }
+        }
+        public int CurrentCompositionNumber
+        {
+            get
+            {
+                return currentCompositionNumber;
+            }
+            set
             {
                 if (value < Compositions.Count)
                 {
-                    currentFileNumber = value;
-                    OpenFile(GetCurrentFile().FileInfo.Name);
+                    currentCompositionNumber = value;
+                    CurrentComposition = Compositions[CurrentCompositionNumber];
+                    OpenFile(CurrentComposition.FileInfo.Name);
                     Play();
-                    this.NotifyPropertyChanged("CurrentFileNumber");
+                    this.NotifyPropertyChanged("CurrentCompositionNumber");
                 }
             }
         }
@@ -132,7 +174,8 @@ namespace AudioPlayer
             foreach (string FileName in FileNames)
                 if (System.IO.File.Exists(FileName))
                     Compositions.Add(new Composition(FileName, PropertyChanged));
-            OpenFile(GetCurrentFile().FileInfo.Name);
+            CurrentComposition = Compositions[CurrentCompositionNumber];
+            OpenFile(CurrentComposition.FileInfo.Name);
         }
 
         public void SetVolume(int Volume)
@@ -143,32 +186,32 @@ namespace AudioPlayer
 
         void Timer_Tick(object sender, EventArgs e)
         {
-            Compositions[CurrentFileNumber].Position = TimeSpan.FromSeconds(Bass.BASS_ChannelBytes2Seconds(ActiveStreamHandle, Bass.BASS_ChannelGetPosition(ActiveStreamHandle)));
-            if (Compositions[CurrentFileNumber].Position.TotalSeconds == GetCurrentFile().Length.TotalSeconds)
+            Position = TimeSpan.FromSeconds(Bass.BASS_ChannelBytes2Seconds(ActiveStreamHandle, Bass.BASS_ChannelGetPosition(ActiveStreamHandle)));
+            if (Position.TotalSeconds == Length.TotalSeconds)
             {
                 if (EnableRepeating)
                 {
-                    if (CurrentFileNumber == Compositions.Count - 1)
+                    if (CurrentCompositionNumber == Compositions.Count - 1)
                     {
-                        CurrentFileNumber = 0;
-                        OpenFile(GetCurrentFile().FileInfo.Name);
+                        CurrentCompositionNumber = 0;
+                        OpenFile(CurrentComposition.FileInfo.Name);
                         Play();
                     }
                     else
                     {
-                        CurrentFileNumber++;
-                        OpenFile(GetCurrentFile().FileInfo.Name);
+                        CurrentCompositionNumber++;
+                        OpenFile(CurrentComposition.FileInfo.Name);
                         Play();
                     }
                 }
                 else
                 {
-                    if (CurrentFileNumber == Compositions.Count - 1)
+                    if (CurrentCompositionNumber == Compositions.Count - 1)
                         Stop();
                     else
                     {
-                        CurrentFileNumber++;
-                        OpenFile(GetCurrentFile().FileInfo.Name);
+                        CurrentCompositionNumber++;
+                        OpenFile(CurrentComposition.FileInfo.Name);
                         Play();
                     }
                 }
@@ -200,7 +243,7 @@ namespace AudioPlayer
                 Bass.BASS_ChannelStop(this.ActiveStreamHandle);
                 Bass.BASS_ChannelSetPosition(this.ActiveStreamHandle, 0);
                 Timer.Stop();
-                Compositions[CurrentFileNumber].Position = new TimeSpan(0);
+                Position = new TimeSpan(0);
             }
             this.IsPlaying = false;
             this.CanStop = false;
@@ -242,7 +285,7 @@ namespace AudioPlayer
                 if (ActiveStreamHandle != 0)
                 {
                     CanPlay = true;
-                    Compositions[CurrentFileNumber].Length = TimeSpan.FromSeconds(Bass.BASS_ChannelBytes2Seconds(ActiveStreamHandle, Bass.BASS_ChannelGetLength(ActiveStreamHandle)));
+                    Length = TimeSpan.FromSeconds(Bass.BASS_ChannelBytes2Seconds(ActiveStreamHandle, Bass.BASS_ChannelGetLength(ActiveStreamHandle)));
                     return true;
                 }
                 else
@@ -264,11 +307,6 @@ namespace AudioPlayer
         public void Rewind(double seconds)
         {
             Bass.BASS_ChannelSetPosition(ActiveStreamHandle, seconds);
-        }
-
-        public Composition GetCurrentFile()
-        {
-            return Compositions[CurrentFileNumber];
         }
     }
 }

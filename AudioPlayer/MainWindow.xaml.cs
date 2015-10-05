@@ -42,11 +42,14 @@ namespace AudioPlayer
             switch (e.PropertyName)
             {
                 case "Position":
-                    CurLengthLB.Content = bassEngine.GetCurrentFile().Position.ToString(@"hh\:mm\:ss");
-                    //slider.Value = bassEngine.GetCurrentFile().Position.TotalSeconds;
+                    CurLengthLB.Content = bassEngine.Position.ToString(@"hh\:mm\:ss");
                     break;
                 case "Length":
-                    LengthLB.Content = bassEngine.GetCurrentFile().Length.ToString(@"hh\:mm\:ss");
+                    LengthLB.Content = bassEngine.Length.ToString(@"hh\:mm\:ss");
+                    break;
+                case "CurrentComposition":
+                    break;
+                case "CurrentCompositionNumber":
                     break;
             }
         }
@@ -66,10 +69,11 @@ namespace AudioPlayer
             openFileDialog.Multiselect = true;
             if (openFileDialog.ShowDialog() == true)
             {
+                bassEngine.PropertyChanged += PropertyChanged;
                 bassEngine.AddFiles(openFileDialog.FileNames, PropertyChanged);
                 this.DataContext = bassEngine;
                 CompositionList.ItemsSource = bassEngine.Compositions;
-                LengthLB.Content = bassEngine.GetCurrentFile().Length.ToString(@"hh\:mm\:ss");
+                LengthLB.Content = bassEngine.Length.ToString(@"hh\:mm\:ss");
                 bassEngine.SetVolume(Convert.ToInt32(VolumeSlider.Value));
             }
         }
