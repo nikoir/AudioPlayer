@@ -47,10 +47,6 @@ namespace AudioPlayer
                 case "Length":
                     LengthLB.Content = bassEngine.Length.ToString(@"hh\:mm\:ss");
                     break;
-                case "CurrentComposition":
-                    break;
-                case "CurrentCompositionNumber":
-                    break;
             }
         }
 

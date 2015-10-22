@@ -181,7 +181,7 @@ namespace AudioPlayer
         public void SetVolume(int Volume)
         {
             float vol = (float)Volume / 100;
-            Bass.BASS_SetVolume(vol);
+            Bass.BASS_ChannelSetAttribute(ActiveStreamHandle, BASSAttribute.BASS_ATTRIB_VOL, vol);
         }
 
         void Timer_Tick(object sender, EventArgs e)
@@ -189,31 +189,22 @@ namespace AudioPlayer
             Position = TimeSpan.FromSeconds(Bass.BASS_ChannelBytes2Seconds(ActiveStreamHandle, Bass.BASS_ChannelGetPosition(ActiveStreamHandle)));
             if (Position.TotalSeconds == Length.TotalSeconds)
             {
-                if (EnableRepeating)
+                if (CurrentCompositionNumber == Compositions.Count - 1)
                 {
-                    if (CurrentCompositionNumber == Compositions.Count - 1)
+                    if (EnableRepeating)
                     {
                         CurrentCompositionNumber = 0;
                         OpenFile(CurrentComposition.FileInfo.Name);
                         Play();
                     }
                     else
-                    {
-                        CurrentCompositionNumber++;
-                        OpenFile(CurrentComposition.FileInfo.Name);
-                        Play();
-                    }
+                        Stop();
                 }
                 else
                 {
-                    if (CurrentCompositionNumber == Compositions.Count - 1)
-                        Stop();
-                    else
-                    {
-                        CurrentCompositionNumber++;
-                        OpenFile(CurrentComposition.FileInfo.Name);
-                        Play();
-                    }
+                    CurrentCompositionNumber++;
+                    OpenFile(CurrentComposition.FileInfo.Name);
+                    Play();
                 }
             }
         }
