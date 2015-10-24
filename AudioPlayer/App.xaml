@@ -9,6 +9,8 @@
                 <ResourceDictionary Source="NextButtonDictionary.xaml"/>
                 <ResourceDictionary Source="StopButtonDictionary.xaml"/>
                 <ResourceDictionary Source="SliderDictionary.xaml"/>
+                <ResourceDictionary Source="AddButtonDictionary.xaml"/>
+                <ResourceDictionary Source="DeleteButtonDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

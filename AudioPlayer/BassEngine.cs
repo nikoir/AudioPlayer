@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Threading;
 using System.Windows.Media.Imaging;
+using System.Collections.ObjectModel;
 using Un4seen.Bass;
 using WPFSoundVisualizationLib;
 using TagLib;
@@ -24,13 +25,12 @@ namespace AudioPlayer
         private bool isPlaying;
         private bool canStop;
         public DispatcherTimer Timer { get; private set; }
-        public List<Composition> Compositions { get; private set; }
+        public ObservableCollection<Composition> Compositions;
         private Composition currentComposition;
         public int currentCompositionNumber;
         public bool EnableRepeating { get; set; }
         public TimeSpan length;
         public TimeSpan position;
-
         public TimeSpan Length
         {
             get
@@ -82,7 +82,6 @@ namespace AudioPlayer
                     currentCompositionNumber = value;
                     CurrentComposition = Compositions[CurrentCompositionNumber];
                     OpenFile(CurrentComposition.FileInfo.Name);
-                    Play();
                     this.NotifyPropertyChanged("CurrentCompositionNumber");
                 }
             }
@@ -161,21 +160,27 @@ namespace AudioPlayer
         }
         public BassEngine()
         {
-
+            Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
         }
 
-        public void AddFiles(string[] FileNames, PropertyChangedEventHandler PropertyChanged)
+        public void AddNewPlaylist(string[] FileNames, PropertyChangedEventHandler PropertyChanged)
         {
-            Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
             Timer = new DispatcherTimer();
             Timer.Tick += Timer_Tick;
             Timer.Interval = TimeSpan.FromMilliseconds(100);
-            Compositions = new List<Composition>();
+            Compositions = new ObservableCollection<Composition>();
+            Compositions.CollectionChanged += Compositions_CollectionChanged;
             foreach (string FileName in FileNames)
                 if (System.IO.File.Exists(FileName))
                     Compositions.Add(new Composition(FileName, PropertyChanged));
+            CurrentCompositionNumber = 0;
             CurrentComposition = Compositions[CurrentCompositionNumber];
             OpenFile(CurrentComposition.FileInfo.Name);
+        }
+
+        public void Compositions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+
         }
 
         public void SetVolume(int Volume)
@@ -298,6 +303,28 @@ namespace AudioPlayer
         public void Rewind(double seconds)
         {
             Bass.BASS_ChannelSetPosition(ActiveStreamHandle, seconds);
+        }
+        public void AddNewCompositions(string[] FileNames)
+        {
+            foreach (string FileName in FileNames)
+                if (System.IO.File.Exists(FileName))
+                    Compositions.Add(new Composition(FileName, PropertyChanged));
+        }
+        public void DeleteCompositions (List<Composition> SelectedItems)
+        {
+            foreach (var Composition in SelectedItems)
+            {
+                if (Composition == CurrentComposition)
+                    CurrentCompositionNumber = 0;
+                Compositions.Remove(Composition);
+            }
+            if (Compositions.Count == 0)
+            {
+                if (ActiveStreamHandle != 0)
+                    Bass.BASS_StreamFree(ActiveStreamHandle);
+            }
+            else
+                OpenFile(Compositions[CurrentCompositionNumber].FileInfo.Name);
         }
     }
 }

@@ -66,13 +66,15 @@ namespace AudioPlayer
             if (openFileDialog.ShowDialog() == true)
             {
                 bassEngine.PropertyChanged += PropertyChanged;
-                bassEngine.AddFiles(openFileDialog.FileNames, PropertyChanged);
+                bassEngine.AddNewPlaylist(openFileDialog.FileNames, PropertyChanged);
                 this.DataContext = bassEngine;
                 CompositionList.ItemsSource = bassEngine.Compositions;
                 LengthLB.Content = bassEngine.Length.ToString(@"hh\:mm\:ss");
                 bassEngine.SetVolume(Convert.ToInt32(VolumeSlider.Value));
             }
         }
+
+
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
@@ -95,6 +97,26 @@ namespace AudioPlayer
             VolumeLB.Content = Convert.ToInt32(e.NewValue);
             if (bassEngine != null)
                 bassEngine.SetVolume(Convert.ToInt32(e.NewValue));
+        }
+        private void AddNewCompositions_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Multiselect = true;
+            if (openFileDialog.ShowDialog() == true)
+                bassEngine.AddNewCompositions(openFileDialog.FileNames);
+        }
+
+        private void DeleteCompositions_Click(object sender, RoutedEventArgs e)
+        {
+            if (CompositionList.SelectedItems == null)
+                return;
+            else
+            {
+                List<Composition> SelectedItems = new List<Composition>();
+                foreach (var item in CompositionList.SelectedItems)
+                    SelectedItems.Add(item as Composition);
+                bassEngine.DeleteCompositions(SelectedItems);
+            }
         }
     }
 }

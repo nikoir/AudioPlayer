@@ -55,3 +55,5 @@ C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\NextB
 C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\PlayButtonDictionary.baml
 C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\StopButtonDictionary.baml
 C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\SliderDictionary.baml
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\AddButtonDictionary.baml
+C:\Users\Николай\Documents\GitHub\AudioPlayer\AudioPlayer\obj\Debug\DeleteButtonDictionary.baml
