@@ -313,18 +313,17 @@ namespace AudioPlayer
         public void DeleteCompositions (List<Composition> SelectedItems)
         {
             foreach (var Composition in SelectedItems)
-            {
-                if (Composition == CurrentComposition)
-                    CurrentCompositionNumber = 0;
                 Compositions.Remove(Composition);
-            }
             if (Compositions.Count == 0)
             {
                 if (ActiveStreamHandle != 0)
                     Bass.BASS_StreamFree(ActiveStreamHandle);
             }
             else
+            {
+                CurrentCompositionNumber = 0;
                 OpenFile(Compositions[CurrentCompositionNumber].FileInfo.Name);
+            }
         }
     }
 }
