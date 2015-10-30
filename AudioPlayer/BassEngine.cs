@@ -29,18 +29,32 @@ namespace AudioPlayer
         private Composition currentComposition;
         public int currentCompositionNumber;
         public bool EnableRepeating { get; set; }
-        public TimeSpan length;
-        public TimeSpan position;
+        private TimeSpan length;
+        private TimeSpan position;
+        private int volume;
         public TimeSpan Length
         {
             get
             {
                 return length;
             }
-            set
+            private set
             {
                 length = value;
                 NotifyPropertyChanged("Length");
+            }
+        }
+        public int Volume
+        {
+            get
+            {
+                return volume;
+            }
+            set
+            {
+                volume = value;
+                SetVolume(Volume);
+                NotifyPropertyChanged("Volume");
             }
         }
 
@@ -63,7 +77,7 @@ namespace AudioPlayer
             {
                 return currentComposition;
             }
-            set
+            private set
             {
                 currentComposition = value;
                 NotifyPropertyChanged("CurrentComposition");
@@ -75,13 +89,13 @@ namespace AudioPlayer
             {
                 return currentCompositionNumber;
             }
-            set
+            private set
             {
                 if (value < Compositions.Count)
                 {
                     currentCompositionNumber = value;
                     CurrentComposition = Compositions[CurrentCompositionNumber];
-                    OpenFile(CurrentComposition.FileInfo.Name);
+                    OpenFile(CurrentComposition.Name);
                     this.NotifyPropertyChanged("CurrentCompositionNumber");
                 }
             }
@@ -158,24 +172,26 @@ namespace AudioPlayer
         {
             return TagLib.File.Create(path);
         }
-        public BassEngine()
+        public BassEngine(PropertyChangedEventHandler PropertyChanged)
         {
             Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
+            Compositions = new ObservableCollection<Composition>();
+            Compositions.CollectionChanged += Compositions_CollectionChanged;
+            Volume = 50;
         }
 
-        public void AddNewPlaylist(string[] FileNames, PropertyChangedEventHandler PropertyChanged)
+        public void AddNewPlaylist(string[] FileNames)
         {
             Timer = new DispatcherTimer();
             Timer.Tick += Timer_Tick;
             Timer.Interval = TimeSpan.FromMilliseconds(100);
-            Compositions = new ObservableCollection<Composition>();
-            Compositions.CollectionChanged += Compositions_CollectionChanged;
+            Compositions.Clear();
             foreach (string FileName in FileNames)
                 if (System.IO.File.Exists(FileName))
                     Compositions.Add(new Composition(FileName, PropertyChanged));
             CurrentCompositionNumber = 0;
             CurrentComposition = Compositions[CurrentCompositionNumber];
-            OpenFile(CurrentComposition.FileInfo.Name);
+            OpenFile(CurrentComposition.Name);
         }
 
         public void Compositions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -183,7 +199,7 @@ namespace AudioPlayer
 
         }
 
-        public void SetVolume(int Volume)
+        void SetVolume(int Volume)
         {
             float vol = (float)Volume / 100;
             Bass.BASS_ChannelSetAttribute(ActiveStreamHandle, BASSAttribute.BASS_ATTRIB_VOL, vol);
@@ -193,25 +209,7 @@ namespace AudioPlayer
         {
             Position = TimeSpan.FromSeconds(Bass.BASS_ChannelBytes2Seconds(ActiveStreamHandle, Bass.BASS_ChannelGetPosition(ActiveStreamHandle)));
             if (Position.TotalSeconds == Length.TotalSeconds)
-            {
-                if (CurrentCompositionNumber == Compositions.Count - 1)
-                {
-                    if (EnableRepeating)
-                    {
-                        CurrentCompositionNumber = 0;
-                        OpenFile(CurrentComposition.FileInfo.Name);
-                        Play();
-                    }
-                    else
-                        Stop();
-                }
-                else
-                {
-                    CurrentCompositionNumber++;
-                    OpenFile(CurrentComposition.FileInfo.Name);
-                    Play();
-                }
-            }
+                PlayNextComposition();
         }
 
 
@@ -298,6 +296,7 @@ namespace AudioPlayer
             if (this.ActiveStreamHandle == 0)
                 return;
             Bass.BASS_ChannelPlay(this.ActiveStreamHandle, false);
+            SetVolume(Volume);
             Timer.Start();
         }
         public void Rewind(double seconds)
@@ -318,11 +317,48 @@ namespace AudioPlayer
             {
                 if (ActiveStreamHandle != 0)
                     Bass.BASS_StreamFree(ActiveStreamHandle);
+                Length = TimeSpan.FromMilliseconds(0);
+                this.CanPlay = false;
             }
             else
             {
                 CurrentCompositionNumber = 0;
-                OpenFile(Compositions[CurrentCompositionNumber].FileInfo.Name);
+                OpenFile(Compositions[CurrentCompositionNumber].Name);
+                this.CanPlay = true;
+            }
+            this.IsPlaying = false;
+            this.CanPause = false;
+            Position = TimeSpan.FromMilliseconds(0);
+        }
+        public void PlayNextComposition()
+        {
+            if (CurrentCompositionNumber == Compositions.Count - 1)
+            {
+                if (EnableRepeating)
+                {
+                    CurrentCompositionNumber = 0;
+                    Play();
+                }
+                else
+                    Stop();
+            }
+            else
+            {
+                CurrentCompositionNumber++;
+                Play();
+            }
+        }
+        public void PlayPrevComposition()
+        {
+            if (CurrentCompositionNumber == 0)
+            {
+                Stop();
+                return;
+            }
+            else
+            {
+                CurrentCompositionNumber--;
+                Play();
             }
         }
     }

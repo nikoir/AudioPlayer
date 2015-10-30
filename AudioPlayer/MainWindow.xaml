@@ -111,10 +111,10 @@
                             </Grid.RowDefinitions>
                             <Label Grid.Column="0" Grid.Row="0" Content="Title:"/>
                             <Label Grid.Column="0" Grid.Row="1" Content="Album:"/>
-                            <Label Grid.Column="0" Grid.Row="2" Content="Artist:"/>
-                            <Label Grid.Column="1" Grid.Row="0" Content="{Binding FileInfo.Tag.Title}"/>
-                            <Label Grid.Column="1" Grid.Row="1" Content="{Binding FileInfo.Tag.Album}"/>
-                            <Label Grid.Column="1" Grid.Row="2" Content="{Binding FileInfo.Tag.FirstArtist}"/>
+                            <Label Grid.Column="0" Grid.Row="2" Content="Artists:"/>
+                            <Label Grid.Column="1" Grid.Row="0" Content="{Binding Title}"/>
+                            <Label Grid.Column="1" Grid.Row="1" Content="{Binding Album}"/>
+                            <Label Grid.Column="1" Grid.Row="2" Content="{Binding Artists}"/>
                         </Grid>
                     </StackPanel>
                 </DataTemplate>
@@ -132,7 +132,9 @@
             <svl:SpectrumAnalyzer Grid.Row="1" x:Name="spectrumAnalyzer" Margin ="10, 0, 10, 0"/>
             <Menu Grid.Row="0" HorizontalAlignment="Stretch" Height="20" VerticalAlignment="Stretch">
                 <MenuItem Header="File">
-                    <MenuItem Header="Open" Click="Browse_Click"></MenuItem>
+                    <MenuItem Header="Open files" Click="Browse_Click"></MenuItem>
+                    <MenuItem Header="Open playlist" Click="Browse_Click"></MenuItem>
+                    <MenuItem Header="Save playlist" Click="Browse_Click"></MenuItem>
                 </MenuItem>
             </Menu>
             <StackPanel Grid.Row="2" Orientation="Vertical">
@@ -158,15 +160,15 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <ToggleButton Click="Play_Click" Grid.Column="3" Template="{DynamicResource PlayButtonControlTemplate}" IsChecked="{Binding IsPlaying, Mode=OneWay}"/>
-                    <Button Grid.Column="2" Margin="0, 5, 0, 5" Template="{DynamicResource NextButtonControlTemplate}" RenderTransformOrigin="0.5,0.5" Width="50">
+                    <Button Grid.Column="2" Margin="0, 5, 0, 5" Template="{DynamicResource NextButtonControlTemplate}" RenderTransformOrigin="0.5,0.5" Width="50" Click="PrevComposition_Click">
                         <Button.RenderTransform>
                             <ScaleTransform ScaleX="-1" />
                         </Button.RenderTransform>
                     </Button>
-                    <Button Grid.Column="4" Margin="0, 5, 0, 5" Template="{DynamicResource NextButtonControlTemplate}" Width="50"/>
+                    <Button Grid.Column="4" Margin="0, 5, 0, 5" Template="{DynamicResource NextButtonControlTemplate}" Width="50" Click="NextComposition_Click"/>
                     <Button Click="Stop_Click" Grid.Column="1" Margin="50, 10, 10, 10" Template="{DynamicResource StopButtonTemplate}"/>
-                    <Slider x:Name="VolumeSlider" VerticalAlignment="Center" Margin="10" Grid.Column="5" Minimum="0" Maximum="100" ValueChanged="VolumeSlider_ValueChanged" Style="{DynamicResource SliderStyle2}"/>
-                    <Label x:Name="VolumeLB" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="6" Height="30"/>
+                    <Slider x:Name="VolumeSlider" VerticalAlignment="Center" Margin="10" Grid.Column="5" Minimum="0" Maximum="100" Style="{DynamicResource SliderStyle2}" Value="{Binding Volume}"/>
+                    <Label x:Name="VolumeLB" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="6" Height="30" Content="{Binding Volume}"/>
                 </Grid>
 
             </StackPanel>

@@ -15,22 +15,66 @@ namespace AudioPlayer
 {
     public class Composition
     {
-        TagLib.File fileInfo;
+        TagLib.File FileInfo;
         BitmapImage image;
+        string artists;
+        string title;
+        string album;
+        string name;
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public TagLib.File FileInfo
+        public string Artists
         {
             get
             {
-                return fileInfo;
+                return artists;
             }
             set
             {
-                fileInfo = value;
-                this.NotifyPropertyChanged("FileInfo");
+                artists = value;
+                NotifyPropertyChanged("Artist");
             }
         }
+
+        public string Title
+        {
+            get
+            {
+                return title;
+            }
+            set
+            {
+                title = value;
+                NotifyPropertyChanged("Title");
+            }
+        }
+
+        public string Album
+        {
+            get
+            {
+                return album;
+            }
+            set
+            {
+                album = value;
+                NotifyPropertyChanged("Album");
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                name = value;
+                NotifyPropertyChanged("Name");
+            }
+        }
+
         public BitmapImage Image
         {
             get
@@ -53,9 +97,32 @@ namespace AudioPlayer
         {
             this.PropertyChanged += PropertyChanged;
             FileInfo = TagLib.File.Create(path);
+            if (FileInfo.Tag.Artists.Length == 0)
+                Artists = "Unknown artist";
+            else
+            {
+                foreach (string str in FileInfo.Tag.Artists)
+                {
+                    Artists += str;
+                    Artists += "; ";
+                }
+                Artists = Artists.Substring(0, Artists.Length - 2);
+            }
+            if (FileInfo.Tag.Title == null)
+                Title = "Unknown title";
+            else
+                Title = FileInfo.Tag.Title;
+            if (FileInfo.Tag.Album == null)
+                Album = "Unknown album";
+            else
+                Album = FileInfo.Tag.Album;
+            Name = FileInfo.Name;
             Image = new BitmapImage();
             Image.BeginInit();
-            Image.StreamSource = new MemoryStream(FileInfo.Tag.Pictures[0].Data.Data);
+            if (FileInfo.Tag.Pictures.Length != 0)
+                Image.StreamSource = new MemoryStream(FileInfo.Tag.Pictures[0].Data.Data);
+            else
+                Image.UriSource = new Uri("Content\\note-blue.png", UriKind.RelativeOrAbsolute);
             Image.EndInit();
         }
         public Composition()

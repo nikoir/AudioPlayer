@@ -32,8 +32,7 @@ namespace AudioPlayer
         public MainWindow()
         {
             InitializeComponent();
-            VolumeSlider.Value = 50;
-            bassEngine = new BassEngine();
+            bassEngine = new BassEngine(PropertyChanged);
             spectrumAnalyzer.RegisterSoundPlayer(bassEngine);
         }
 
@@ -66,11 +65,10 @@ namespace AudioPlayer
             if (openFileDialog.ShowDialog() == true)
             {
                 bassEngine.PropertyChanged += PropertyChanged;
-                bassEngine.AddNewPlaylist(openFileDialog.FileNames, PropertyChanged);
+                bassEngine.AddNewPlaylist(openFileDialog.FileNames);
                 this.DataContext = bassEngine;
                 CompositionList.ItemsSource = bassEngine.Compositions;
                 LengthLB.Content = bassEngine.Length.ToString(@"hh\:mm\:ss");
-                bassEngine.SetVolume(Convert.ToInt32(VolumeSlider.Value));
             }
         }
 
@@ -83,20 +81,17 @@ namespace AudioPlayer
 
         private void slider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
         {
-            bassEngine.Pause();
+            if(bassEngine.IsPlaying)
+                bassEngine.Pause();
         }
 
         private void slider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
-            bassEngine.Rewind(slider.Value);
-            bassEngine.Play();
-        }
-
-        private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            VolumeLB.Content = Convert.ToInt32(e.NewValue);
-            if (bassEngine != null)
-                bassEngine.SetVolume(Convert.ToInt32(e.NewValue));
+            if (bassEngine.CanPlay)
+            {
+                bassEngine.Rewind(slider.Value);
+                bassEngine.Play();
+            }
         }
         private void AddNewCompositions_Click(object sender, RoutedEventArgs e)
         {
@@ -117,6 +112,14 @@ namespace AudioPlayer
                     SelectedItems.Add(item as Composition);
                 bassEngine.DeleteCompositions(SelectedItems);
             }
+        }
+        private void NextComposition_Click(object sender, RoutedEventArgs e)
+        {
+            bassEngine.PlayNextComposition();
+        }
+        private void PrevComposition_Click(object sender, RoutedEventArgs e)
+        {
+            bassEngine.PlayPrevComposition();
         }
     }
 }
