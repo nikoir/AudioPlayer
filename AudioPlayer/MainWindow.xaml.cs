@@ -34,6 +34,10 @@ namespace AudioPlayer
             InitializeComponent();
             bassEngine = new BassEngine(PropertyChanged);
             spectrumAnalyzer.RegisterSoundPlayer(bassEngine);
+            bassEngine.PropertyChanged += PropertyChanged;
+            this.DataContext = bassEngine;
+            LengthLB.Content = "00:00:00";
+            CurLengthLB.Content = "00:00:00";
         }
 
         void PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -62,17 +66,38 @@ namespace AudioPlayer
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Multiselect = true;
+            openFileDialog.Filter = "Music files|*.mp3;*.mp2;*.mp1;*.ogg;*.wav;*.aiff";
             if (openFileDialog.ShowDialog() == true)
             {
-                bassEngine.PropertyChanged += PropertyChanged;
                 bassEngine.AddNewPlaylist(openFileDialog.FileNames);
-                this.DataContext = bassEngine;
                 CompositionList.ItemsSource = bassEngine.Compositions;
                 LengthLB.Content = bassEngine.Length.ToString(@"hh\:mm\:ss");
             }
         }
 
+        private void OpenPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Playlists|*m3u";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string[] FileNames = M3UFile.Parse(openFileDialog.FileName);
+                if (FileNames != null)
+                {
+                    bassEngine.AddNewPlaylist(FileNames);
+                    this.DataContext = bassEngine;
+                    CompositionList.ItemsSource = bassEngine.Compositions;
+                    LengthLB.Content = bassEngine.Length.ToString(@"hh\:mm\:ss");
+                }
+            }
+        }
 
+        private void SavePlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            if (saveFileDialog.ShowDialog() == true)
+                M3UFile.Save(bassEngine.GetFileNames(), saveFileDialog.FileName);
+        }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {

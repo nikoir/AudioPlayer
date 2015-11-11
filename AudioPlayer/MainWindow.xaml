@@ -133,8 +133,8 @@
             <Menu Grid.Row="0" HorizontalAlignment="Stretch" Height="20" VerticalAlignment="Stretch">
                 <MenuItem Header="File">
                     <MenuItem Header="Open files" Click="Browse_Click"></MenuItem>
-                    <MenuItem Header="Open playlist" Click="Browse_Click"></MenuItem>
-                    <MenuItem Header="Save playlist" Click="Browse_Click"></MenuItem>
+                    <MenuItem Header="Open playlist" Click="OpenPlaylist_Click"></MenuItem>
+                    <MenuItem Header="Save playlist" Click="SavePlaylist_Click"></MenuItem>
                 </MenuItem>
             </Menu>
             <StackPanel Grid.Row="2" Orientation="Vertical">

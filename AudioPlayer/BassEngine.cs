@@ -212,6 +212,13 @@ namespace AudioPlayer
                 PlayNextComposition();
         }
 
+        public string[] GetFileNames()
+        {
+            List<string> FileNames = new List<string>();
+            foreach (Composition composition in Compositions)
+                FileNames.Add(composition.Name);
+            return FileNames.ToArray();
+        }
 
         public int GetFFTFrequencyIndex(int frequency)
         {
