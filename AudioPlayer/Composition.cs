@@ -87,6 +87,7 @@ namespace AudioPlayer
                 this.NotifyPropertyChanged("Image");
             }
         }
+    
         private void NotifyPropertyChanged(string info)
         {
             if (this.PropertyChanged == null)

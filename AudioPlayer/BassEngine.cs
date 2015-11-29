@@ -187,8 +187,7 @@ namespace AudioPlayer
             Timer.Interval = TimeSpan.FromMilliseconds(100);
             Compositions.Clear();
             foreach (string FileName in FileNames)
-                if (System.IO.File.Exists(FileName))
-                    Compositions.Add(new Composition(FileName, PropertyChanged));
+                Compositions.Add(new Composition(FileName, PropertyChanged));
             CurrentCompositionNumber = 0;
             CurrentComposition = Compositions[CurrentCompositionNumber];
             OpenFile(CurrentComposition.Name);

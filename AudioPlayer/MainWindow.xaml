@@ -59,7 +59,7 @@
                     <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Track Grid.Row="1" x:Name="PART_Track"   >
+                <Track Grid.Row="1" x:Name="PART_Track">
                     <Track.DecreaseRepeatButton>
                         <RepeatButton Style="{StaticResource SliderRepeatButton1}"  Command="Slider.DecreaseLarge" />
                     </Track.DecreaseRepeatButton>
@@ -122,7 +122,7 @@
         </ListBox>
         <Button Grid.Column="1" Margin="10, 0, 0, 20" Width="30" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Left" Template="{DynamicResource AddButtonTemplate}" Click="AddNewCompositions_Click"/>
         <Button Grid.Column="1" Margin="50, 0, 0, 20" Width="30" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Left" Template="{DynamicResource DeleteButtonTemplate}" Click="DeleteCompositions_Click"/>
-        <ToggleButton Grid.Column="1" Margin="90, 0, 0, 20" Width="30" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Left" IsChecked="{Binding EnableRepeating}"/>
+        <CheckBox Content="Enable repeating" Grid.Column="1" Margin="90, 0, 0, 28" VerticalAlignment="Bottom" HorizontalAlignment="Left" IsChecked="{Binding EnableRepeating}"/>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="20"></RowDefinition>
@@ -132,7 +132,7 @@
             <svl:SpectrumAnalyzer Grid.Row="1" x:Name="spectrumAnalyzer" Margin ="10, 0, 10, 0"/>
             <Menu Grid.Row="0" HorizontalAlignment="Stretch" Height="20" VerticalAlignment="Stretch">
                 <MenuItem Header="File">
-                    <MenuItem Header="Open files" Click="Browse_Click"></MenuItem>
+                    <MenuItem Header="Open files" Click="CreatePlaylist_Click"></MenuItem>
                     <MenuItem Header="Open playlist" Click="OpenPlaylist_Click"></MenuItem>
                     <MenuItem Header="Save playlist" Click="SavePlaylist_Click"></MenuItem>
                 </MenuItem>

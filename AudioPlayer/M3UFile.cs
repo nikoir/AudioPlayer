@@ -11,10 +11,6 @@ namespace AudioPlayer
     {
         public static string[] Parse(string FilePath)
         {
-            if (!File.Exists(FilePath))
-                throw new FileNotFoundException("Playlist is not found!");
-            if (Path.GetExtension(FilePath).ToLower() != ".m3u")
-                throw new FileFormatException("Playlist has incorrect extension!");
             using (StreamReader sr = new StreamReader(FilePath, Encoding.Default))
             {
                 string FileName;
@@ -23,12 +19,12 @@ namespace AudioPlayer
                 while (!sr.EndOfStream)
                 {
                     FileName = sr.ReadLine();
-                    if (!Path.IsPathRooted(FilePath))
+                    if (!Path.IsPathRooted(FileName))
                         FileName = DirectoryName + "\\" + FileName;
                     if (File.Exists(FileName))
                         FileNames.Add(FileName);
                     else
-                        throw new FileNotFoundException("File from playlist is not found!");
+                        throw new FileNotFoundException("File from playlist is not found!", FileName);
                 }
                 return FileNames.ToArray();
             }

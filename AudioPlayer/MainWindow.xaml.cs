@@ -62,7 +62,7 @@ namespace AudioPlayer
                     bassEngine.Play();
         }
 
-        private void Browse_Click(object sender, RoutedEventArgs e)
+        private void CreatePlaylist_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Multiselect = true;
@@ -78,7 +78,7 @@ namespace AudioPlayer
         private void OpenPlaylist_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Playlists|*m3u";
+            openFileDialog.Filter = "Playlists|*.m3u";
             if (openFileDialog.ShowDialog() == true)
             {
                 string[] FileNames = M3UFile.Parse(openFileDialog.FileName);
@@ -95,6 +95,7 @@ namespace AudioPlayer
         private void SavePlaylist_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Playlists|*.m3u";
             if (saveFileDialog.ShowDialog() == true)
                 M3UFile.Save(bassEngine.GetFileNames(), saveFileDialog.FileName);
         }
@@ -121,6 +122,7 @@ namespace AudioPlayer
         private void AddNewCompositions_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Music files|*.mp3;*.mp2;*.mp1;*.ogg;*.wav;*.aiff";
             openFileDialog.Multiselect = true;
             if (openFileDialog.ShowDialog() == true)
                 bassEngine.AddNewCompositions(openFileDialog.FileNames);
